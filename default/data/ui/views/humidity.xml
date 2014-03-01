@@ -1,0 +1,93 @@
+<dashboard>
+  <label>Humidity Overview</label>
+  <row>
+    <chart>
+      <title>Inside Humidity (%)</title>
+      <searchString>sourcetype=nest Collection=device | stats latest(current_humidity)</searchString>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">radialGauge</option>
+      <option name="charting.chart.nullValueMode">gaps</option>
+      <option name="charting.chart.rangeValues">["0","10","60","80","100"]</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">minimal</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.gaugeColors">[0x324969,0x7e9f44,0xf7912c,0xd13b3b]</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Outside Humidity (%)</title>
+      <searchString>sourcetype=nest Collection=weather | stats latest(current.humidity)</searchString>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">radialGauge</option>
+      <option name="charting.chart.nullValueMode">gaps</option>
+      <option name="charting.chart.rangeValues">["0","10","60","80","100"]</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">minimal</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.gaugeColors">[0x324969,0x7e9f44,0xf7912c,0xd13b3b]</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+  </row>
+  <row>
+    <chart>
+      <title>24-Hour Humidity History</title>
+      <searchString>sourcetype=nest Collection=device OR Collection=weather | timechart span=5m avg(current_humidity) as Inside, avg(current.humidity) as Outside</searchString>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">line</option>
+      <option name="charting.chart.nullValueMode">connect</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">none</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+      <option name="charting.axisTitleY.text">%</option>
+      <option name="charting.axisY.maximumNumber">100</option>
+      <option name="charting.axisY.minimumNumber">0</option>
+    </chart>
+    <chart>
+      <title>7-Day Humidity History</title>
+      <searchString>sourcetype=nest Collection=device OR Collection=weather | timechart span=30m avg(current_humidity) as Inside, avg(current.humidity) as Outside</searchString>
+      <earliestTime>-7d@h</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">line</option>
+      <option name="charting.chart.nullValueMode">connect</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">none</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+      <option name="charting.axisTitleY.text">%</option>
+      <option name="charting.axisY.maximumNumber">100</option>
+      <option name="charting.axisY.minimumNumber">0</option>
+    </chart>
+  </row>
+</dashboard>

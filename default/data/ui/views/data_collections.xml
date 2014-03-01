@@ -1,0 +1,16 @@
+<dashboard>
+  <label>Debug</label>
+  <row>
+    <table>
+      <title>Collection Information</title>
+      <searchString>sourcetype=nest | stats latest(_time) as Latest_Data_Point by Collection, Object_Class, Object | eval Age_of_Latest_Data_Point = tostring(floor((now()-Latest_Data_Point)/60)) + " minute(s)" | eval Latest_Data_Point=strftime(Latest_Data_Point, "%Y-%d-%m %H:%M:%S")</searchString>
+      <earliestTime>-30d@d</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="wrap">true</option>
+      <option name="rowNumbers">false</option>
+      <option name="dataOverlayMode">none</option>
+      <option name="drilldown">row</option>
+      <option name="count">10</option>
+    </table>
+  </row>
+</dashboard>

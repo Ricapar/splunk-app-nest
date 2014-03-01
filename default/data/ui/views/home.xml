@@ -1,0 +1,95 @@
+<dashboard>
+  <label>My Nest</label>
+  <description/>
+  <row>
+    <chart>
+      <title>Inside Temperature  (°F)</title>
+      <searchString>sourcetype=nest Collection=shared | eval temp_f = `c_to_f(current_temperature)` | stats latest(temp_f) as temp | eval temp=floor(temp)</searchString>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="charting.axisTitleX.visibility">visible</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">radialGauge</option>
+      <option name="charting.chart.nullValueMode">gaps</option>
+      <option name="charting.chart.rangeValues">["20","32","55","85","120"]</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.gaugeColors">[0xFFFFFF,0x6cb8ca,0x7e9f44,0xd13b3b]</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">right</option>
+    </chart>
+    <chart>
+      <title>Today's System Usage</title>
+      <searchString>sourcetype=nest Collection=shared | eval cooling_systems = hvac_ac_state + "," + hvac_cool_x2_state | eval heating_systems = hvac_alt_heat_state + "," + hvac_alt_heat_x2_state + "," + hvac_aux_heater_state + "," + hvac_emer_heat_state + "," + hvac_heat_x2_state + "," + hvac_heat_x3_state + "," + hvac_heater_state | eval fan_systems=hvac_fan_state | makemv delim="," cooling_systems | makemv delim="," heating_systems | table _time Device cooling_systems heating_systems fan_systems | timechart span=5m count(eval(cooling_systems=="true")) as AC, count(eval(heating_systems="true")) as Heat, count(eval(fan_systems=="true")) as Fan | eval AC=AC*5 | eval Heat=Heat*5 | eval Fan=Fan*5 | timechart span=1h sum(AC) as AC, sum(Heat) as Heat, sum(Fan) as Fan</searchString>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>@h</latestTime>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">column</option>
+      <option name="charting.chart.nullValueMode">gaps</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">stacked</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">all</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">top</option>
+      <option name="charting.axisTitleY.text">Minutes On</option>
+      <option name="charting.axisY.maximumNumber">60</option>
+      <option name="charting.axisY.minimumNumber">0</option>
+      <option name="charting.axisLabelsY.majorUnit">15</option>
+      <option name="charting.seriesColors">[0x007eff,0xff8400,0x6fd600,0xd3d3d3]</option>
+    </chart>
+    <chart>
+      <title>24-Hour Temperature History</title>
+      <searchString>sourcetype=nest (Collection=shared OR Collection=weather) | eval nest_temp_f = `c_to_f(current_temperature)` | eval nest_target_f = `c_to_f(target_temperature)` | timechart span=5m avg(nest_target_f) as Target, avg(nest_temp_f) as Inside, avg(current.temp_f) as Outside</searchString>
+      <earliestTime>-24h@h</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="charting.axisTitleX.visibility">collapsed</option>
+      <option name="charting.axisTitleY.visibility">visible</option>
+      <option name="charting.axisX.scale">linear</option>
+      <option name="charting.axisY.scale">linear</option>
+      <option name="charting.chart">line</option>
+      <option name="charting.chart.nullValueMode">connect</option>
+      <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+      <option name="charting.chart.stackMode">default</option>
+      <option name="charting.chart.style">shiny</option>
+      <option name="charting.drilldown">none</option>
+      <option name="charting.layout.splitSeries">0</option>
+      <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+      <option name="charting.legend.placement">top</option>
+      <option name="charting.axisTitleY.text">°F</option>
+    </chart>
+  </row>
+  <row>
+    <table>
+      <title>Nest Thermostats</title>
+      <searchString>sourcetype=nest (Collection=shared OR Collection=device) | transaction Object maxevents=2 | dedup Object | table name current_schedule_mode current_temperature target_temperature current_humidity auto_away_enable | eval target_temperature=`c_to_f(target_temperature)` | eval current_temperature=`c_to_f(current_temperature)` | rename current_schedule_mode as Mode, target_temperature as Target_Temperature_F, current_temperature as Temperature_F, current_humidity as Humidity, auto_away_enable as Auto_Away | eval Mode=lower(Mode)</searchString>
+      <earliestTime>-4h@m</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="wrap">true</option>
+      <option name="rowNumbers">false</option>
+      <option name="dataOverlayMode">none</option>
+      <option name="drilldown">row</option>
+      <option name="count">10</option>
+    </table>
+    <table>
+      <title>My Locations</title>
+      <searchString>sourcetype=nest Collection=weather | stats latest(current.condition) as Condition, latest(current.temp_f) as Temperature_F, latest(current.humidity) as Humidity by location.full_name | rename location.full_name as Location</searchString>
+      <earliestTime>-4h@m</earliestTime>
+      <latestTime>now</latestTime>
+      <option name="wrap">true</option>
+      <option name="rowNumbers">false</option>
+      <option name="dataOverlayMode">none</option>
+      <option name="drilldown">row</option>
+      <option name="count">10</option>
+    </table>
+  </row>
+</dashboard>

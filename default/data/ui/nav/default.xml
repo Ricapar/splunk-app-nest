@@ -1,0 +1,9 @@
+<nav search_view="search" color="#149fcf">
+  <view name="home" default="true" />
+  <view name="temperature" />
+  <view name="humidity" />
+  <collection label="Other">
+    <view source="unclassified" />
+  </collection>
+  <view name="search" default='true' />
+</nav>
