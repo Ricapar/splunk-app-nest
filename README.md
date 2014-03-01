@@ -20,6 +20,7 @@ If you have any suggested improvements, feel free to issue me a pull request on 
 
 * My wonderful fiancé, Erica Feldman, for suggesting the idea of Splunk-ing my Nest thermostat in the first place.
 * Scott M. Baker (smbaker), the author of [pynest](https://github.com/smbaker/pynest) - a Python library that lets you control your nest via the command line. I used his Python code to help me understand exactly what was happening behind the scenes when talking to Nest.com. 
+* Splunk, for [hosting a Hackathon in late 2012](http://blogs.splunk.com/2012/12/17/meet-your-splunk-hackathon-winner-splunking-nest/) that drove me to write a very hacked-together version of this app.
 
 ## Disclaimer
 This app uses undocumented APIs on Nest.com's website. It is entirely possible that everything may break if they decide to update their APIs, which would likely break existing dashboards, or break the data collection altogether.
